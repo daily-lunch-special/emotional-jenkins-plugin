@@ -1,3 +1,5 @@
+package org.jenkinsci.plugins.emotional_mascot
+
 import org.jenkinsci.plugins.emotional_mascot.EmotionalMascotDescriptor
 
 /**
