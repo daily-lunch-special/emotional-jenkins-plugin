@@ -3,17 +3,19 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.580</version><!-- which version of Jenkins is this plugin built against? -->
+    <version>1.589</version><!-- which version of Jenkins is this plugin built against? -->
   </parent>
 
   <groupId>org.jenkins-ci.plugins</groupId>
   <artifactId>emotional-mascot-plugin</artifactId>
-  <version>0.0.4</version>
+  <version>0.0.5</version>
   <packaging>hpi</packaging>
   <developers>
     <developer>
       <id>rentalname</id>
       <name>rentalname@github</name>
+      <email>agenda21st@gmail.com</email>
+      <timezone>+9</timezone>
     </developer>
   </developers>
 

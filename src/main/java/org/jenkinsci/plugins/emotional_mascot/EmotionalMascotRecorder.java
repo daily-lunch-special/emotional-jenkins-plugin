@@ -1,16 +1,13 @@
 package org.jenkinsci.plugins.emotional_mascot;
 
-import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.model.Action;
 import hudson.model.BuildListener;
-import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
-import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
-import net.sf.json.JSONObject;
-import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -19,6 +16,15 @@ public class EmotionalMascotRecorder extends Recorder {
 
     private static final Logger LOGGER = Logger
             .getLogger(EmotionalMascotRecorder.class.getName());
+
+    @DataBoundConstructor
+    public EmotionalMascotRecorder(){}
+
+    @Override
+    public final Action getProjectAction(final AbstractProject<?, ?> project) {
+        Action action = new EmotionalMascotAction(Emotion.NORMAL);
+        return action;
+    }
 
     /**
      * Adds RoundhouseAction to the build actions. This is applicable for each
