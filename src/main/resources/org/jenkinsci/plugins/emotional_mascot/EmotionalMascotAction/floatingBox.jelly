@@ -1,0 +1,8 @@
+<j:jelly xmlns:j="jelly:core">
+    <j:set var="emotion" value="${from.emotion.toString().toLowerCase()}"/>
+    <script>
+        Element.setStyle($('body'), {
+          'background-image': 'url(${rootURL}/plugin/emotional-mascot-plugin/images/${emotion}-jenkins.png)'
+        });
+    </script>
+</j:jelly>
