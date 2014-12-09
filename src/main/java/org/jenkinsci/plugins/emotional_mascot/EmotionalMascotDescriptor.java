@@ -21,7 +21,7 @@ public class EmotionalMascotDescriptor extends BuildStepDescriptor<Publisher> {
     }
 
     @Override
-    public boolean isApplicable(Class<? extends AbstractProject> aClass) {
+    public boolean isApplicable(final Class<? extends AbstractProject> aClass) {
         return true;
     }
 }

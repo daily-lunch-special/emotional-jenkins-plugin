@@ -6,7 +6,7 @@ import hudson.model.Result;
  * Created by Hi on 2014/11/15.
  */
 public enum Emotion {
-    GREAT, BAD, NORMAL;
+    GREAT, BAD, WORRY;
 
     public static Emotion get(final Result result) {
         Emotion emotion;
@@ -15,7 +15,7 @@ public enum Emotion {
         } else if (Result.SUCCESS.equals(result)) {
             emotion = GREAT;
         } else {
-            emotion = NORMAL;
+            emotion = WORRY;
         }
         return emotion;
     }

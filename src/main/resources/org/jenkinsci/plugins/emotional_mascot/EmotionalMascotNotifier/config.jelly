@@ -14,11 +14,12 @@
                     "content: url(${rootURL}/plugin/emotional-mascot-plugin/images/${emotion}.png);" +
                     "position: absolute;" +
                     "top: 50px;" +
+                    "z-index: -1;" +
                 '}';
             var style = document.createElement('style');
             style.appendChild(document.createTextNode(css));
             document.getElementsByTagName('head')[0].appendChild(style);
-            alert("call Action/floating");
+            alert("call Notifire/floating");
         }()
     </script>
 </j:jelly>

@@ -1,11 +1,4 @@
 <j:jelly xmlns:j="jelly:core">
     <j:set var="emotion" value="${it.emotion.toString().toLowerCase()}"/>
-    <script>
-        el = document.getElementById("side-panel");
-        el.setAttribute("style",
-                "background-image: url(${rootURL}/plugin/emotional-mascot-plugin/images/${emotion}-jenkins.png);" +
-                "background-repeat: no-repeat;" +
-                "background-position: left bottom;" +
-                "min-height: 720px;");
-    </script>
+    <j:set var="character" value="${it.character.toString().toLowerCase()}"/>
 </j:jelly>
