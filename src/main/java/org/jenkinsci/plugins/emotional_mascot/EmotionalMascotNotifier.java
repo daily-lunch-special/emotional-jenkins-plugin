@@ -3,10 +3,13 @@ package org.jenkinsci.plugins.emotional_mascot;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
+import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Notifier;
+import hudson.tasks.Publisher;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.IOException;
@@ -32,7 +35,14 @@ public class EmotionalMascotNotifier extends Notifier {
         return true;
     }
 
+    @Override
+    public Action getProjectAction(AbstractProject<?, ?> project) {
+        return new EmotionalMascotAction(project);
+    }
+
     @Extension
+    public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
+
     public static class DescriptorImpl extends BuildStepDescriptor{
 
         @Override
@@ -44,5 +54,10 @@ public class EmotionalMascotNotifier extends Notifier {
         public String getDisplayName() {
             return null;
         }
+    }
+
+    @Override
+    public BuildStepDescriptor<Publisher> getDescriptor() {
+        return DESCRIPTOR;
     }
 }

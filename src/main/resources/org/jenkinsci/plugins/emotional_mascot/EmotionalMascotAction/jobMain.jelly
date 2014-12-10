@@ -1,4 +1,5 @@
-<j:jelly xmlns:j="jelly:core">
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
     <j:set var="emotion" value="${it.emotion.toString().toLowerCase()}"/>
     <j:set var="character" value="${it.character.toString().toLowerCase()}"/>
     <style>

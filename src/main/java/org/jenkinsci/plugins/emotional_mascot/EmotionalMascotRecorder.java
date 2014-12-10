@@ -19,36 +19,9 @@ public class EmotionalMascotRecorder extends Recorder {
     @DataBoundConstructor
     public EmotionalMascotRecorder(){}
 
-    /*
-     *
-     */
     @Override
     public final Action getProjectAction(final AbstractProject<?, ?> project) {
-        int currentBuildNum = project.getNextBuildNumber() - 1;
-        int successCount = 0;
-        Action action;
-        Character character = Character.getCycle(currentBuildNum);
-        if(currentBuildNum >= 5){
-            for(int i = 0; i < 5; i++){
-                AbstractBuild<?, ?> build = project.getBuildByNumber(currentBuildNum - i);
-                if(Result.SUCCESS.equals(build.getResult())){
-                    successCount++;
-                }
-            }
-            if(successCount >= 5){
-                action = new EmotionalMascotAction(Emotion.GREAT, character);
-                LOGGER.info("GREAT");
-            }else if(successCount >= 3){
-                action = new EmotionalMascotAction(Emotion.WORRY, character);
-                LOGGER.info("WORRY");
-            }else{
-                action = new EmotionalMascotAction(Emotion.BAD, character);
-                LOGGER.info("BAD");
-            }
-        }else{
-            action = new EmotionalMascotAction(Emotion.get(project.getLastBuild().getResult()), character);
-        }
-        return action;
+        return new EmotionalMascotAction(project);
     }
 
     /**
@@ -65,6 +38,7 @@ public class EmotionalMascotRecorder extends Recorder {
     public boolean perform(final AbstractBuild<?, ?> build,
                            final Launcher launcher, final BuildListener listener) throws InterruptedException, IOException {
         LOGGER.info("calling Recorder#perform");
+        LOGGER.info("buildNum:" + build.getNumber());
         Emotion emotion = Emotion.get(build.getResult());
         Character character = Character.getCycle(build.getNumber());
         build.addAction(new EmotionalMascotAction(emotion, character));

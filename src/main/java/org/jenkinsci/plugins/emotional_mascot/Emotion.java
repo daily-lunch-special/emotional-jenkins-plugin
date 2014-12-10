@@ -1,5 +1,6 @@
 package org.jenkinsci.plugins.emotional_mascot;
 
+import hudson.model.AbstractBuild;
 import hudson.model.Result;
 
 /**
