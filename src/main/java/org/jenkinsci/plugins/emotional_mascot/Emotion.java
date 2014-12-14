@@ -7,7 +7,7 @@ import hudson.model.Result;
  * Created by Hi on 2014/11/15.
  */
 public enum Emotion {
-    GREAT, BAD, WORRY;
+    GREAT, BAD, WORRY, WORKING;
 
     public static Emotion get(final Result result) {
         Emotion emotion;

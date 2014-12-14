@@ -1,51 +1,76 @@
 package org.jenkinsci.plugins.emotional_mascot;
 
+import hudson.Extension;
 import hudson.Launcher;
-import hudson.model.*;
-import hudson.model.Fingerprint.RangeSet;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
+import hudson.model.Action;
+import hudson.model.BuildListener;
+import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
-import hudson.tasks.Builder;
+import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
+import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.logging.Logger;
 
 public class EmotionalMascotRecorder extends Recorder {
-
-    private static final Logger LOGGER = Logger.getLogger(EmotionalMascotRecorder.class.getName());
 
     @DataBoundConstructor
     public EmotionalMascotRecorder(){}
 
     @Override
-    public final Action getProjectAction(final AbstractProject<?, ?> project) {
+    public Action getProjectAction(AbstractProject<?, ?> project) {
         return new EmotionalMascotAction(project);
     }
 
-    /**
-     * Adds RoundhouseAction to the build actions. This is applicable for each
-     * build.
-     *
-     * @param build    the build
-     * @param launcher the launcher
-     * @param listener the listener
-     * @return true
-     * @throws InterruptedException when there's an interruption
-     * @throws IOException          when there's an IO error
-     */
+    @Override
+    public BuildStepDescriptor getDescriptor() {
+        return DESCRIPTOR;
+    }
+
     public boolean perform(final AbstractBuild<?, ?> build,
                            final Launcher launcher, final BuildListener listener) throws InterruptedException, IOException {
-        LOGGER.info("calling Recorder#perform");
-        LOGGER.info("buildNum:" + build.getNumber());
-        Emotion emotion = Emotion.get(build.getResult());
-        Character character = Character.getCycle(build.getNumber());
-        build.addAction(new EmotionalMascotAction(emotion, character));
+        build.replaceAction(new EmotionalMascotAction(build));
         return true;
     }
 
     public BuildStepMonitor getRequiredMonitorService() {
         return BuildStepMonitor.BUILD;
+    }
+
+    @Extension
+    public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
+
+    public static final class DescriptorImpl extends BuildStepDescriptor<Publisher>{
+
+        DescriptorImpl(){
+            super(EmotionalMascotRecorder.class);
+            load();
+        }
+
+        @Override
+        public boolean isApplicable(Class<? extends AbstractProject> jobType) {
+            return true;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return "Summon Your Mascot";
+        }
+
+        @Override
+        public boolean configure(StaplerRequest req, JSONObject json) throws FormException {
+            save();
+            return super.configure(req, json);
+        }
+
+        @Override
+        public Publisher newInstance(StaplerRequest req, JSONObject formData) throws FormException {
+            return new EmotionalMascotRecorder();
+        }
     }
 }
