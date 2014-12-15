@@ -2,68 +2,63 @@ package org.jenkinsci.plugins.emotional_mascot;
 
 import hudson.model.*;
 
-import java.util.List;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
+/*
+ * TODO: ライセンスを記載する
+ * TODO: コードが汚いので, もっとシンプルになるように書き直す
+ *      プロジェクトのビューとビルド結果のビューでアクションの振る舞いが変わっているので, 別のクラスに分割できると思う
+ * TODO: テストの書き方がわからなくてだいぶ苦労したので, テストの書き方について調査する
+ * TODO: メソッド名の付け方がいけてないので, 分かりやすい名前にリファクタする
+ */
 public final class EmotionalMascotAction implements Action {
-    private static final Logger LOGGER = Logger.getLogger(EmotionalMascotRecorder.class.getName());
-    public  Emotion   emotion;
-    public  Character character;
-    private Project   project;
+//    private static final Logger LOGGER = Logger.getLogger(EmotionalMascotRecorder.class.getName());
+    public  Emotion         emotion;
+    public  Character       character;
+    private AbstractProject project;
 
     public EmotionalMascotAction(Emotion emotion, Character character) {
         super();
         this.emotion   = emotion;
         this.character = character;
+        this.project   = null;
+    }
+
+    public EmotionalMascotAction(AbstractBuild<?, ?> build) {
+        this(Emotion.byResult(build.getResult()), Character.byRotation(build.getNumber()));
     }
 
     public EmotionalMascotAction(AbstractProject<?, ?> project) {
         super();
-        this.project = (Project) project;
-        refreshFace(this.project);
-    }
-
-    public EmotionalMascotAction(AbstractBuild<?, ?> build) {
-        super();
-        this.emotion = Emotion.get(build.getResult());
-        this.character = Character.getCycle(build.getNumber());
+        this.project = project;
     }
 
     public Emotion getEmotion() {
         if(this.project != null){
-            refreshFace(this.project);
+            reloadAction(this.project);
         }
-        return emotion;
+        return this.emotion;
     }
 
     public Character getCharacter() {
         if(this.project != null){
-            refreshFace(this.project);
+            reloadAction(this.project);
         }
-        return character;
+        return this.character;
     }
 
-    public String getIconFileName() { return null;}
-
-    public String getDisplayName() {
-        return "";
-    }
-
-    public String getUrlName() {
-        return "";
-    }
-
-    private void refreshFace(Project project){
-        int currentBuildNum = project.getNextBuildNumber() - 1;
-        int successCount = 0;
-        List builders = project.getBuilders();
-
-        if(builders.size() >= 5){
-            int to = builders.size();
-            int from = to - 5;
-            List<Build> recentBuilds = builders.subList(from, to);
-
-            for(Build build: recentBuilds){
+    private void reloadAction(AbstractProject project){
+        TreeMap<Integer, AbstractBuild> builds = new TreeMap<Integer, AbstractBuild>();
+        for(int i = project.getNextBuildNumber();builds.size() < 5 && i > 0; i-- ){
+            AbstractBuild build = project.getNearestBuild(i);
+            if(build != null){
+                builds.put(build.getNumber(), build);
+            }
+        }
+        if(builds.size() >= 5){
+            int successCount = 0;
+            for(AbstractBuild build: builds.values()){
                 if(Result.SUCCESS.equals(build.getResult())){
                     successCount++;
                 }
@@ -75,12 +70,23 @@ public final class EmotionalMascotAction implements Action {
             }else{
                 this.emotion = Emotion.BAD;
             }
-        }else if(builders.size() == 0){
+        }else if(builds.isEmpty()){
             this.emotion = Emotion.WORKING;
         }else{
-            this.emotion = Emotion.get(project.getLastBuild().getResult());
+            AbstractBuild lastBuild = builds.lastEntry().getValue();
+            this.emotion = Emotion.byResult(lastBuild.getResult());
         }
 
-        this.character = Character.getCycle(currentBuildNum);
+        this.character = Character.byRotation(project.getNextBuildNumber());
+    }
+
+    public String getIconFileName() { return null;}
+
+    public String getDisplayName() {
+        return "";
+    }
+
+    public String getUrlName() {
+        return "";
     }
 }

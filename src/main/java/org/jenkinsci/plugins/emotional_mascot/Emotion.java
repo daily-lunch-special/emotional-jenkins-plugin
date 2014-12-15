@@ -1,15 +1,11 @@
 package org.jenkinsci.plugins.emotional_mascot;
 
-import hudson.model.AbstractBuild;
 import hudson.model.Result;
 
-/**
- * Created by Hi on 2014/11/15.
- */
 public enum Emotion {
     GREAT, BAD, WORRY, WORKING;
 
-    public static Emotion get(final Result result) {
+    public static Emotion byResult(final Result result) {
         Emotion emotion;
         if (Result.FAILURE.equals(result)) {
             emotion = BAD;

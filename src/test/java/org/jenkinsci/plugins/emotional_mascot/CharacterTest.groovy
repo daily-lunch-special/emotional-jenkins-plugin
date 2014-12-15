@@ -5,6 +5,6 @@ package org.jenkinsci.plugins.emotional_mascot
  */
 class CharacterTest extends GroovyTestCase {
     void testCharacterName(){
-        assertEquals Character.PRONAMA.name, "暮井 慧"
+        assertEquals Character.PRONAMA.name(), "PRONAMA"
     }
 }

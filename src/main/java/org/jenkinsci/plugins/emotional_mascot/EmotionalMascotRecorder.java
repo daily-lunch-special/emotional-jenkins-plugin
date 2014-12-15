@@ -15,7 +15,6 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 public class EmotionalMascotRecorder extends Recorder {
 
